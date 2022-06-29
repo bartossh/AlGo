@@ -80,9 +80,27 @@ func BenchmarkSort(b *testing.B) {
 	}
 }
 
+func BenchmarkSort100_000(b *testing.B) {
+	b.StopTimer()
+	testSl := helperCreateSlice[int](100_000)
+	b.StartTimer()
+	for n := 0; n < b.N; n++ {
+		Sort(testSl)
+	}
+}
+
 func BenchmarkSort1_000_000(b *testing.B) {
 	b.StopTimer()
 	testSl := helperCreateSlice[int](1_000_000)
+	b.StartTimer()
+	for n := 0; n < b.N; n++ {
+		Sort(testSl)
+	}
+}
+
+func BenchmarkSort10_000_000(b *testing.B) {
+	b.StopTimer()
+	testSl := helperCreateSlice[int](10_000_000)
 	b.StartTimer()
 	for n := 0; n < b.N; n++ {
 		Sort(testSl)
