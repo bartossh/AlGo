@@ -1,6 +1,9 @@
 package bucketsort
 
-import "github.com/bartossh/AlGo/constrains"
+import (
+	"github.com/bartossh/AlGo/constrains"
+	"github.com/bartossh/AlGo/insertionsort"
+)
 
 // Sort using bucket sort algorithm
 func Sort[T constrains.Sortable](sl []T) {
@@ -23,6 +26,10 @@ func Sort[T constrains.Sortable](sl []T) {
 		bucket := buckets[int(ln*v/max)]
 		bucket = append(bucket, v)
 		buckets[int(ln*v/max)] = bucket
+	}
+
+	for _, bucket := range buckets {
+		insertionsort.Sort(bucket)
 	}
 
 	nsl := make([]T, 0, len(sl))
