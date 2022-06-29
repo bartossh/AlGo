@@ -4,6 +4,10 @@ import "github.com/bartossh/AlGo/constrains"
 
 // Sort slice using in-place insertion sort algorithm.
 func Sort[T constrains.Sortable](sl []T) {
+	if sl == nil {
+		return
+	}
+
 	for i := 1; i < len(sl); i++ {
 		cur := sl[i]
 		j := i - 1

@@ -4,6 +4,10 @@ import "github.com/bartossh/AlGo/constrains"
 
 // Sort sorts slice using bubble sort algorithm
 func Sort[T constrains.Sortable](sl []T) {
+	if sl == nil {
+		return
+	}
+
 	sorted := false
 	n := len(sl) - 1
 	for !sorted {
