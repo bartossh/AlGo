@@ -1,4 +1,4 @@
-package bubblesort
+package insertionsort
 
 import (
 	"testing"
