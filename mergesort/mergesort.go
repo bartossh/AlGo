@@ -1,8 +1,6 @@
 package mergesort
 
 import (
-	"sync"
-
 	"github.com/bartossh/AlGo/constrains"
 )
 
@@ -15,8 +13,6 @@ func Sort[T constrains.Sortable](sl []T) {
 		return
 	}
 	mid := len(sl) / 2
-	wg := sync.WaitGroup{}
-	wg.Add(2)
 	Sort(sl[:mid])
 	Sort(sl[mid:])
 	merge(sl, mid)
