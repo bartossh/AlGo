@@ -1,4 +1,4 @@
-package insertionsort
+package shellsort
 
 import (
 	"testing"
@@ -84,6 +84,24 @@ func BenchmarkSort100_000(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		b.StopTimer()
 		testSl := helperCreateSlice[int](100_000)
+		b.StartTimer()
+		Sort(testSl)
+	}
+}
+
+func BenchmarkSort1_000_000(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		b.StopTimer()
+		testSl := helperCreateSlice[int](1_000_000)
+		b.StartTimer()
+		Sort(testSl)
+	}
+}
+
+func BenchmarkSort10_000_000(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		b.StopTimer()
+		testSl := helperCreateSlice[int](10_000_000)
 		b.StartTimer()
 		Sort(testSl)
 	}

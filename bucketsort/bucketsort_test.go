@@ -8,7 +8,7 @@ import (
 
 func helperIsSorted[T constrains.Sortable](sl []T) bool {
 	for i := range sl[:len(sl)-2] {
-		if sl[i] > sl[i+1] {
+		if sl[i] >= sl[i+1] {
 			return false
 		}
 	}
@@ -72,28 +72,28 @@ func TestDecreasingByte(t *testing.T) {
 }
 
 func BenchmarkSort(b *testing.B) {
-	b.StopTimer()
-	testSl := helperCreateSlice[int](10_000)
-	b.StartTimer()
 	for n := 0; n < b.N; n++ {
+		b.StopTimer()
+		testSl := helperCreateSlice[int](10_000)
+		b.StartTimer()
 		Sort(testSl)
 	}
 }
 
 func BenchmarkSort100_000(b *testing.B) {
-	b.StopTimer()
-	testSl := helperCreateSlice[int](100_000)
-	b.StartTimer()
 	for n := 0; n < b.N; n++ {
+		b.StopTimer()
+		testSl := helperCreateSlice[int](100_000)
+		b.StartTimer()
 		Sort(testSl)
 	}
 }
 
 func BenchmarkSort1_000_000(b *testing.B) {
-	b.StopTimer()
-	testSl := helperCreateSlice[int](1_000_000)
-	b.StartTimer()
 	for n := 0; n < b.N; n++ {
+		b.StopTimer()
+		testSl := helperCreateSlice[int](1_000_000)
+		b.StartTimer()
 		Sort(testSl)
 	}
 }

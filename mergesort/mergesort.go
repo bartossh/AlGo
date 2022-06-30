@@ -19,7 +19,9 @@ func Sort[T constrains.Sortable](sl []T) {
 }
 
 func merge[T constrains.Sortable](sl []T, mid int) {
-	lh, rh := sl[:mid], sl[mid:]
+	lh, rh := make([]T, len(sl[:mid])), make([]T, len(sl[mid:]))
+	copy(lh, sl[:mid])
+	copy(rh, sl[mid:])
 	l, r := 0, 0
 
 	for i := range sl {
