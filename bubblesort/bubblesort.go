@@ -18,6 +18,6 @@ func Sort[T constrains.Sortable](sl []T) {
 				sorted = false
 			}
 		}
-		n -= 1
+		n--
 	}
 }

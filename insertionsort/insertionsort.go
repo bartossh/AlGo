@@ -17,7 +17,7 @@ func Sort[T constrains.Sortable](sl []T) {
 			if j == 0 {
 				break inner
 			}
-			j -= 1
+			j--
 		}
 	}
 }
