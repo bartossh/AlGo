@@ -13,3 +13,5 @@ Playground repository containing collection of algorithms written in Go.
 5. [Merge](https://github.com/bartossh/AlGo/blob/main/mergesort/mergesort.go) - merge sort is a divide and conquer sort algorithm with time complexity average of O(n log n)
 6. [Shell](https://github.com/bartossh/AlGo/blob/main/shellsort/shellsort.go) - shell sort algorithm will sort values that are far apart from each other rather than adjacent, worst time complexity is O(n log^2 n), worst is O(n log n)
 7. [Quick](https://github.com/bartossh/AlGo/blob/main/quicksort/quicksort.go) - quick sort algorithm is a divide and conquer sort algorithm with time complexity average of O(n\log n)
+8. [BabyStepGiantStep](https://github.com/bartossh/AlGo/blob/main/babystepgiantstep/babystepgiantstep.go) - small step big step algorithm solves discrete logarithm problem of a^x = b (mod n) , with respect to gcd(a, n) == 1 with time complexity of O(sqrt(n))
+
