@@ -18,4 +18,4 @@ Playground repository containing collection of algorithms written in Go.
 ### Math
 
 1. [BabyStepGiantStep](https://github.com/bartossh/AlGo/blob/main/babystepgiantstep/babystepgiantstep.go) - small step big step algorithm solves discrete logarithm problem of a^x = b (mod n) , with respect to gcd(a, n) == 1 with time complexity of O(sqrt(n))
-
+2. [ExtendedEuclidean](https://github.com/bartossh/AlGo/blob/main/extendedeuclidean/extendedeuclidean.go) - in arithmetic and computer programming, the extended Euclidean algorithm is an extension to the Euclidean algorithm, and computes, in addition to the greatest common divisor (gcd) of integers a and b, also the coefficients of Bézout's identity, which are integers x and y such that

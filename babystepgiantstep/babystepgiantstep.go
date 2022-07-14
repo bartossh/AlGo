@@ -10,7 +10,7 @@ import (
 // with O(sqrt(n)) time complexity. Uses  Baby-step Giant-step algorithm
 // Wikipedia reference: https://en.wikipedia.org/wiki/Baby-step_giant-step
 // When a is the primitive root modulo n, the answer is unique.
-// Otherwise it will return the smallest positive solution
+// Otherwise, it will return the smallest positive solution
 func Solver(a, b, n uint64) (uint64, error) {
 	if b == 1 {
 		return n, nil
