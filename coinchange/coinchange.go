@@ -6,7 +6,8 @@ import (
 
 const maxUint = ^uint(0)
 
-// CoinChange calculates minimal amount of coins to be used to get amount if possible or returns error otherwise
+// CoinChange calculates minimal amount of coins to be used to get asked amount,
+// otherwise if not possible returns an error
 func CoinChange(coins []uint, amount uint) (uint, error) {
 	mem := make(map[uint]uint, amount+1)
 	mem[0] = 0
