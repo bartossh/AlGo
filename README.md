@@ -25,3 +25,4 @@ Playground repository containing collection of algorithms written in Go.
 #### Memoization
 
 1. [Fibonacci nth element](https://github.com/bartossh/AlGo/blob/main/fibonacci/fibonacci.go) - calculates n'th fibonacci sequence element recursively storing each n'th fibonacci value in the map to only calculate it once
+2. [Coin Change](https://github.com/bartossh/AlGo/blob/main/coinchange/coinchange.go) - calculates the fewest number of coins that need to make up that amount
