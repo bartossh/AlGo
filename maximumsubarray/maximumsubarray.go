@@ -1,6 +1,6 @@
 package maximumsubarray
 
-// Solver solves maximum sub array value
+// Solver solves maximum sub array sum
 func Solver(arr []int) int {
 	mem := make([]int, len(arr))
 	mem[0] = arr[0]
