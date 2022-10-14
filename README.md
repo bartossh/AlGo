@@ -15,6 +15,9 @@ Playground repository containing collection of algorithms written in Go.
 7. [Quick](https://github.com/bartossh/AlGo/blob/main/quicksort/quicksort.go) - quick sort algorithm is a divide and conquer sort algorithm with time complexity average of O(n\log n)
 8. [V8XorShift128](https://github.com/bartossh/AlGo/blob/main/v8XorShift128/v8XorShift128.go) - chrome v8 random function xor shift 128 
 
+### Path traversal
+
+1. [Dijkstra](https://github.com/bartossh/AlGo/blob/main/dijkstra/dijkstra.go) - calculates shortest path without need for walking all available paths
 
 ### Math
 
