@@ -19,7 +19,12 @@ func (cf *ConsecutiveFibonacci) SolveNthValue(n int) int {
 	if v, ok := cf.store[n]; ok {
 		return v
 	}
-	v := cf.SolveNthValue(n-1) + cf.SolveNthValue(n-2)
+	v := 1
+	before := 1
+	for i := 2; i < n; i++ {
+		v = v + before
+		before = v - before
+	}
 	cf.store[n] = v
 	return v
 }
