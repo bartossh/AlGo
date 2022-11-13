@@ -192,7 +192,7 @@ func TestInsertAtBTreeNodeFreeCapacity(t *testing.T) {
 	}
 }
 
-func BenchmarkBTreeNodeInsertAtFreeCapacity(b *testing.B) {
+func BenchmarkBTreeNodeInsertAtNotExcededCapacity(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		node := make([]int, 9, 10)
 		n := &btreeNode[int]{leafs: nil, values: node}
@@ -200,7 +200,7 @@ func BenchmarkBTreeNodeInsertAtFreeCapacity(b *testing.B) {
 	}
 }
 
-func BenchmarkBTreeNodeInsertAtFullCapacity(b *testing.B) {
+func BenchmarkBTreeNodeInsertAtExcededCapacity(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		node := make([]int, 10, 10)
 		n := &btreeNode[int]{leafs: nil, values: node}
@@ -273,7 +273,27 @@ func TestInsertValues(t *testing.T) {
 	}
 }
 
-func BenchmarkInsertValuesFreeCapacity100Inserts(b *testing.B) {
+func BenchmarkInsertValuesNotExceededCapacity5Inserts(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		v := make([]int, 0, 5)
+		n := btreeNode[int]{leafs: nil, values: v}
+		for i := 0; i < 5; i++ {
+			n.insert(i)
+		}
+	}
+}
+
+func BenchmarkInsertValuesHalfExceededCapacity5Inserts(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		v := make([]int, 0, 2)
+		n := btreeNode[int]{leafs: nil, values: v}
+		for i := 0; i < 5; i++ {
+			n.insert(i)
+		}
+	}
+}
+
+func BenchmarkInsertValuesNotExcededCapacity100Inserts(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		v := make([]int, 0, 100)
 		n := btreeNode[int]{leafs: nil, values: v}
@@ -283,7 +303,7 @@ func BenchmarkInsertValuesFreeCapacity100Inserts(b *testing.B) {
 	}
 }
 
-func BenchmarkInsertValuesHalfFullCapacity100Inserts(b *testing.B) {
+func BenchmarkInsertValuesHalfExcededCapacity100Inserts(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		v := make([]int, 0, 50)
 		n := btreeNode[int]{leafs: nil, values: v}
@@ -344,4 +364,20 @@ func TestSplitBTreeNodeLeafs(t *testing.T) {
 		})
 	}
 
+}
+
+func BenchmarkSplitLeafs(b *testing.B) {
+	values := []int{7, 12, 17}
+	rv := 14
+	l := []int{18, 19}
+	r := []int{21, 22}
+	for n := 0; n < b.N; n++ {
+		n := newBtreeNode[int](len(values) + 1)
+		n.values = values
+		for range values {
+			n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1))
+		}
+		n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1))
+		n.splitLeafs(rv, l, r)
+	}
 }
