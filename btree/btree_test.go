@@ -272,3 +272,76 @@ func TestInsertValues(t *testing.T) {
 
 	}
 }
+
+func BenchmarkInsertValuesFreeCapacity100Inserts(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		v := make([]int, 0, 100)
+		n := btreeNode[int]{leafs: nil, values: v}
+		for i := 0; i < 100; i++ {
+			n.insert(i)
+		}
+	}
+}
+
+func BenchmarkInsertValuesHalfFullCapacity100Inserts(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		v := make([]int, 0, 50)
+		n := btreeNode[int]{leafs: nil, values: v}
+		for i := 0; i < 100; i++ {
+			n.insert(i)
+		}
+	}
+}
+
+func TestSplitBTreeNodeLeafs(t *testing.T) {
+	cases := []struct {
+		values []int
+		rv     int
+		l      []int
+		r      []int
+		idx    int
+	}{
+		{
+			values: []int{7, 10, 13},
+			rv:     3,
+			l:      []int{1, 2},
+			r:      []int{4, 5, 6},
+			idx:    0,
+		},
+		{
+			values: []int{4, 12, 16},
+			rv:     9,
+			l:      []int{7, 8},
+			r:      []int{10, 11},
+			idx:    1,
+		},
+		{
+			values: []int{7, 12, 17},
+			rv:     14,
+			l:      []int{13},
+			r:      []int{15, 16},
+			idx:    2,
+		},
+		{
+			values: []int{7, 12, 17},
+			rv:     20,
+			l:      []int{18, 19},
+			r:      []int{21, 22},
+			idx:    3,
+		},
+	}
+	for i, c := range cases {
+		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
+			n := newBtreeNode[int](len(c.values) + 1)
+			n.values = c.values
+			for range c.values {
+				n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1))
+			}
+			n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1))
+			n.splitLeafs(c.rv, c.l, c.r)
+			assert.Equal(t, c.l, n.leafs[c.idx].values)
+			assert.Equal(t, c.r, n.leafs[c.idx+1].values)
+		})
+	}
+
+}

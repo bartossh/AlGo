@@ -18,7 +18,7 @@ type Root[T comperable] struct {
 }
 
 func newBtreeNode[T comperable](max int) *btreeNode[T] {
-	leafs := make([]*btreeNode[T], 0, max)
+	leafs := make([]*btreeNode[T], 0, max+1)
 	values := make([]T, 0, max)
 	return &btreeNode[T]{leafs, values}
 }
@@ -35,6 +35,20 @@ func (r *Root[T]) changeRootNode(v T, left, right *btreeNode[T]) {
 func New[T comperable](max int) *Root[T] {
 	n := newBtreeNode[T](max)
 	return &Root[T]{n, max}
+}
+
+func (n *btreeNode[T]) splitLeafs(v T, l []T, r []T) {
+	ln := newBtreeNode[T](cap(n.values))
+	rn := newBtreeNode[T](cap(n.values))
+	ln.values = l
+	rn.values = r
+	for i, vv := range n.values {
+		if v < vv {
+			n.leafs = append(n.leafs[:i], append([]*btreeNode[T]{ln, rn}, n.leafs[i+1:]...)...)
+			return
+		}
+	}
+	n.leafs = append(n.leafs[:len(n.leafs)-1], []*btreeNode[T]{ln, rn}...)
 }
 
 func (n *btreeNode[T]) insert(v T) (T, []T, []T) {
