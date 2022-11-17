@@ -352,12 +352,12 @@ func TestSplitBTreeNodeLeafs(t *testing.T) {
 	}
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			n := newBtreeNode[int](len(c.values) + 1)
+			n := newBtreeNode[int](len(c.values)+1, nil)
 			n.values = c.values
 			for range c.values {
-				n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1))
+				n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1, n))
 			}
-			n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1))
+			n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1, n))
 			n.splitLeafs(c.rv, c.l, c.r)
 			assert.Equal(t, c.l, n.leafs[c.idx].values)
 			assert.Equal(t, c.r, n.leafs[c.idx+1].values)
@@ -372,12 +372,47 @@ func BenchmarkSplitLeafs(b *testing.B) {
 	l := []int{18, 19}
 	r := []int{21, 22}
 	for n := 0; n < b.N; n++ {
-		n := newBtreeNode[int](len(values) + 1)
+		n := newBtreeNode[int](len(values)+1, nil)
 		n.values = values
 		for range values {
-			n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1))
+			n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1, n))
 		}
-		n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1))
+		n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1, n))
 		n.splitLeafs(rv, l, r)
 	}
+}
+
+func TestInsertBTree(t *testing.T) {
+	// given
+	datanums := []int{21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20}
+	// when
+	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for _, c := range cases {
+		t.Run(fmt.Sprintf("testing max values %v", c), func(t *testing.T) {
+			r := New[int](c)
+			for _, v := range datanums {
+				r.Insert(v)
+			}
+			// then
+			assert.Equal(t, c, r.max)
+		})
+	}
+}
+
+func BenchmarkInsertBTree(b *testing.B) {
+	// given
+	datanums := []int{21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20}
+	// when
+	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for _, c := range cases {
+		b.Run(fmt.Sprintf("testing max values %v", c), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				r := New[int](c)
+				for _, v := range datanums {
+					r.Insert(v)
+				}
+			}
+		})
+	}
+
 }
