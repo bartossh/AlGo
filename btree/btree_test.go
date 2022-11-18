@@ -399,6 +399,25 @@ func TestInsertBTree(t *testing.T) {
 	}
 }
 
+func TestInsertRepeatedBTree(t *testing.T) {
+	// given
+	datanums := []int{
+		21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20, 21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20,
+	}
+	// when
+	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for _, c := range cases {
+		t.Run(fmt.Sprintf("testing max values %v", c), func(t *testing.T) {
+			r := New[int](c)
+			for _, v := range datanums {
+				r.Insert(v)
+			}
+			// then
+			assert.Equal(t, c, r.max)
+		})
+	}
+}
+
 func BenchmarkInsertBTree(b *testing.B) {
 	// given
 	datanums := []int{21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20}
@@ -414,5 +433,86 @@ func BenchmarkInsertBTree(b *testing.B) {
 			}
 		})
 	}
+}
 
+func BenchmarkInsertLArgeDatasetBTree(b *testing.B) {
+	// given
+	numOfItems := 100000
+	// when
+	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for _, c := range cases {
+		b.Run(fmt.Sprintf("testing max values %v", c), func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				r := New[int](c)
+				for i := 0; i < numOfItems; i++ {
+					r.Insert(i)
+				}
+			}
+		})
+	}
+}
+
+func TestFindInBTree(t *testing.T) {
+	// given
+	cases := []struct {
+		found     bool
+		inserted  []int
+		toBeFound []int
+	}{
+		{
+			found:     true,
+			inserted:  []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+			toBeFound: []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+		},
+		//		{
+		//			found:     true,
+		//			inserted:  []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
+		//			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+		//		},
+		//		{
+		//			found:     true,
+		//			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+		//			toBeFound: []int{5, 6, 7, 8, 9, 0, 1, 2, 3, 4},
+		//		},
+		//		{
+		//			found:     true,
+		//			inserted:  []int{0, 1, 2, 9, 3, 9, 4, 8, 5, 7, 6},
+		//			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+		//		},
+		//		{
+		//			found:     false,
+		//			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+		//			toBeFound: []int{10, 11, 12, 13, 14, 15, 16},
+		//		},
+		//		{
+		//			found:     false,
+		//			inserted:  []int{10, 11, 12, 13, 14, 15, 16},
+		//			toBeFound: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
+		//		},
+		//		{
+		//			found:     false,
+		//			inserted:  []int{1, 3, 5, 7, 9, 11},
+		//			toBeFound: []int{0, 2, 4, 6, 8, 10},
+		//		},
+	}
+
+	sizes := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	for _, size := range sizes {
+		for i, c := range cases {
+			t.Run(fmt.Sprintf("size: %v, test case %v, passing %v", size, i, c.found), func(t *testing.T) {
+				// when
+				r := New[int](size)
+				for _, v := range c.inserted {
+					r.Insert(v)
+				}
+				r.Traversal()
+				//		for _, v := range c.toBeFound {
+				//			// then
+				//			f := r.Find(v)
+				//			assert.Equal(t, c.found, f)
+				//		}
+			})
+		}
+	}
 }

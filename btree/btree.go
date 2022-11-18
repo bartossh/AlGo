@@ -1,6 +1,9 @@
 package btree
 
 import (
+	"fmt"
+	"strings"
+
 	"golang.org/x/exp/constraints"
 )
 
@@ -91,10 +94,12 @@ FinderLoop:
 			break FinderLoop
 		}
 		f := false
+	ValuesLoop:
 		for i, vv := range node.values {
 			if v < vv {
 				node = node.leafs[i]
 				f = true
+				break ValuesLoop
 			}
 		}
 		if !f {
@@ -107,18 +112,64 @@ SpliterLoop:
 	for {
 		var left, right []T
 		v, left, right = node.insert(v)
-		if left == nil && right == nil {
+		if len(left) == 0 && len(right) == 0 {
 			break SpliterLoop
 		}
 
 		if parent == nil {
 			parent = newBtreeNode[T](cap(node.values), nil)
-			node.splitLeafs(v, left, right)
+			node.parent = parent
 			r.root = parent
+			node = parent
+			node.splitLeafs(v, left, right)
 			continue
 		}
 		node = parent
 		node.splitLeafs(v, left, right)
 	}
 
+}
+
+// Traversal travers the nodes printing the values
+func (r *Root[T]) Traversal() {
+	r.root.traversal(0)
+}
+
+func (n *btreeNode[T]) traversal(spcs int) {
+	indent := strings.Repeat("-", spcs)
+	for i := 0; i < len(n.values); i++ {
+		if len(n.leafs) != 0 {
+			n.leafs[i].traversal(spcs + 2)
+		}
+		fmt.Printf("%s%v\n", indent, n.values[i])
+	}
+	if len(n.leafs) != 0 {
+		n.leafs[len(n.leafs)-1].traversal(spcs + 2)
+	}
+}
+
+// Find looks for entity of type T in the btree structure
+// returning true if entity exists or false otherwise
+func (r *Root[T]) Find(v T) bool {
+	node := r.root
+NodeTraversal:
+	for {
+		for i, vv := range node.values {
+			switch {
+			case v == vv:
+				return true
+			case v < vv:
+				if len(node.leafs) == 0 {
+					break NodeTraversal
+				}
+				node = node.leafs[i]
+				continue NodeTraversal
+			}
+		}
+		if len(node.leafs) == 0 {
+			break NodeTraversal
+		}
+		node = node.leafs[len(node.leafs)-1]
+	}
+	return false
 }
