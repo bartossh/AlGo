@@ -353,14 +353,26 @@ func TestSplitBTreeNodeLeafs(t *testing.T) {
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
 			n := newBtreeNode[int](len(c.values)+1, nil)
-			n.values = c.values
+			for _, v := range c.values {
+				n.values = append(n.values, v)
+			}
 			for range c.values {
 				n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1, n))
 			}
 			n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1, n))
-			n.splitLeafs(c.rv, c.l, c.r)
+
+			for _, l := range n.leafs {
+				fmt.Printf("%v\n", l)
+			}
+			fmt.Println("----")
+			n.splitLeafsLastNode(c.rv, c.l, c.r)
+			for _, l := range n.leafs {
+				fmt.Printf("%v\n", l)
+			}
 			assert.Equal(t, c.l, n.leafs[c.idx].values)
-			assert.Equal(t, c.r, n.leafs[c.idx+1].values)
+			if c.idx < len(c.values) {
+				assert.Equal(t, c.r, n.leafs[c.idx+1].values)
+			}
 		})
 	}
 
@@ -378,7 +390,7 @@ func BenchmarkSplitLeafs(b *testing.B) {
 			n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1, n))
 		}
 		n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1, n))
-		n.splitLeafs(rv, l, r)
+		n.splitLeafsLastNode(rv, l, r)
 	}
 }
 
@@ -464,36 +476,36 @@ func TestFindInBTree(t *testing.T) {
 			inserted:  []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
 			toBeFound: []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
 		},
-		//		{
-		//			found:     true,
-		//			inserted:  []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
-		//			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-		//		},
-		//		{
-		//			found:     true,
-		//			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-		//			toBeFound: []int{5, 6, 7, 8, 9, 0, 1, 2, 3, 4},
-		//		},
-		//		{
-		//			found:     true,
-		//			inserted:  []int{0, 1, 2, 9, 3, 9, 4, 8, 5, 7, 6},
-		//			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-		//		},
-		//		{
-		//			found:     false,
-		//			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-		//			toBeFound: []int{10, 11, 12, 13, 14, 15, 16},
-		//		},
-		//		{
-		//			found:     false,
-		//			inserted:  []int{10, 11, 12, 13, 14, 15, 16},
-		//			toBeFound: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
-		//		},
-		//		{
-		//			found:     false,
-		//			inserted:  []int{1, 3, 5, 7, 9, 11},
-		//			toBeFound: []int{0, 2, 4, 6, 8, 10},
-		//		},
+		{
+			found:     true,
+			inserted:  []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
+			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+		},
+		{
+			found:     true,
+			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+			toBeFound: []int{5, 6, 7, 8, 9, 0, 1, 2, 3, 4},
+		},
+		{
+			found:     true,
+			inserted:  []int{0, 1, 2, 9, 3, 9, 4, 8, 5, 7, 6},
+			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+		},
+		{
+			found:     false,
+			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
+			toBeFound: []int{10, 11, 12, 13, 14, 15, 16},
+		},
+		{
+			found:     false,
+			inserted:  []int{10, 11, 12, 13, 14, 15, 16},
+			toBeFound: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
+		},
+		{
+			found:     false,
+			inserted:  []int{1, 3, 5, 7, 9, 11},
+			toBeFound: []int{0, 2, 4, 6, 8, 10},
+		},
 	}
 
 	sizes := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
@@ -506,13 +518,23 @@ func TestFindInBTree(t *testing.T) {
 				for _, v := range c.inserted {
 					r.Insert(v)
 				}
-				r.Traversal()
-				//		for _, v := range c.toBeFound {
-				//			// then
-				//			f := r.Find(v)
-				//			assert.Equal(t, c.found, f)
-				//		}
+				for _, v := range c.toBeFound {
+					// then
+					f := r.Find(v)
+					assert.Equal(t, c.found, f)
+				}
 			})
 		}
+	}
+}
+
+func TestTraversalBTree(t *testing.T) {
+	sizes := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for _, size := range sizes {
+		r := New[int](size)
+		for i := 0; i < 200; i++ {
+			r.Insert(i)
+		}
+		r.Traversal()
 	}
 }

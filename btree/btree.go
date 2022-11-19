@@ -33,39 +33,75 @@ func New[T comperable](max int) *Root[T] {
 	return &Root[T]{n, max}
 }
 
-func (n *btreeNode[T]) splitLeafs(v T, l []T, r []T) {
+func (n *btreeNode[T]) splitLeafsLastNode(v T, l, r []T) (nV T, nLN, nRN *btreeNode[T]) {
 	ln := newBtreeNode[T](cap(n.values), n)
 	rn := newBtreeNode[T](cap(n.values), n)
 	ln.values = l
 	rn.values = r
-	if len(n.leafs) == 0 {
-		n.values = append(n.values, v)
+	return n.splitLeafsIntermediate(v, ln, rn)
+}
+
+func (n *btreeNode[T]) splitLeafsIntermediate(v T, ln, rn *btreeNode[T]) (nV T, nLN, nRN *btreeNode[T]) {
+	ln.parent = n.parent
+	rn.parent = n.parent
+	switch {
+	case len(n.leafs) == 0:
 		n.leafs = append(n.leafs, []*btreeNode[T]{ln, rn}...)
+		n.values = append(n.values, v)
+		return
+	case len(n.values) == cap(n.values):
+		var tempLeafs []*btreeNode[T]
+		var tempValues []T
+		var f bool
+	FoundValueLoop:
+		for i, vv := range n.values {
+			if v < vv {
+				tempLeafs = append(n.leafs[:i], append([]*btreeNode[T]{ln, rn}, n.leafs[i+1:]...)...)
+				tempValues = append(n.values[:i], append([]T{v}, n.values[i:]...)...)
+				f = true
+				break FoundValueLoop
+			}
+		}
+		if !f {
+			tempLeafs = append(n.leafs[:len(n.leafs)-1], []*btreeNode[T]{ln, rn}...)
+			tempValues = append(n.values, v)
+		}
+		half := (len(tempValues) - 1) / 2
+		nV = tempValues[half]
+		n.values = make([]T, 0, cap(n.values))
+		n.values = append(tempValues[:half], tempValues[half+1:]...)
+
+		nLN = tempLeafs[half-1]
+		nRN = tempLeafs[half]
+
+		n.leafs = make([]*btreeNode[T], 0, cap(n.leafs))
+		n.leafs = append(tempLeafs[:half], tempLeafs[half+2:]...)
+		return
+	default:
+		for i, vv := range n.values {
+			if v < vv {
+				n.leafs = append(n.leafs[:i], append([]*btreeNode[T]{ln, rn}, n.leafs[i+1:]...)...)
+				n.values = append(n.values[:i], append([]T{v}, n.values[i:]...)...)
+				return
+			}
+		}
+		n.leafs = append(n.leafs[:len(n.leafs)-1], []*btreeNode[T]{ln, rn}...)
+		n.values = append(n.values, v)
 		return
 	}
-	for i, vv := range n.values {
-		if v < vv {
-			n.leafs = append(n.leafs[:i], append([]*btreeNode[T]{ln, rn}, n.leafs[i+1:]...)...)
-			n.values = append(n.values[:i], append([]T{v}, n.values[i:]...)...)
-			return
-		}
-	}
-	n.leafs = append(n.leafs[:len(n.leafs)-1], []*btreeNode[T]{ln, rn}...)
-	n.values = append(n.values, v)
 }
 
 func (n *btreeNode[T]) insert(v T) (T, []T, []T) {
-	idx := 0
+	idx := len(n.values)
 	for i, vv := range n.values {
 		if v == vv {
 			var t T
 			return t, nil, nil
 		}
-		if v > vv {
-			idx = i + 1
-			continue
+		if v < vv {
+			idx = i
+			break
 		}
-		break
 	}
 	return n.insertAt(idx, v)
 }
@@ -103,31 +139,41 @@ FinderLoop:
 			}
 		}
 		if !f {
-			node = node.leafs[len(node.values)]
+			node = node.leafs[len(node.leafs)-1]
 		}
 	}
 
+	var left, right []T
+	v, left, right = node.insert(v)
+	if len(left) == 0 && len(right) == 0 {
+		return
+	}
+
+	var leftNode, rightNode *btreeNode[T]
 	parent := node.parent
+	if parent == nil {
+		parent = newBtreeNode[T](cap(node.values), nil)
+		v, leftNode, rightNode = parent.splitLeafsLastNode(v, left, right)
+		node.parent = parent
+		r.root = parent
+		node = parent
+		return
+	}
+
 SpliterLoop:
 	for {
-		var left, right []T
-		v, left, right = node.insert(v)
-		if len(left) == 0 && len(right) == 0 {
-			break SpliterLoop
-		}
-
 		if parent == nil {
 			parent = newBtreeNode[T](cap(node.values), nil)
 			node.parent = parent
 			r.root = parent
-			node = parent
-			node.splitLeafs(v, left, right)
-			continue
+		}
+		v, leftNode, rightNode = parent.splitLeafsIntermediate(v, leftNode, rightNode)
+		if leftNode == nil && rightNode == nil {
+			break SpliterLoop
 		}
 		node = parent
-		node.splitLeafs(v, left, right)
+		parent = node.parent
 	}
-
 }
 
 // Traversal travers the nodes printing the values
