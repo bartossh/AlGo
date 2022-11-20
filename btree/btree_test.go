@@ -7,11 +7,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
+func TestInsertAtBTreenodeFullCapacity(t *testing.T) {
 	// given
 
 	cases := []struct {
-		node  *btreeNode[int]
+		node  *node[int]
 		value int
 		index int
 		nv    int
@@ -19,7 +19,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 		right []int
 	}{
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 2, 3}},
+			node:  &node[int]{nodes: nil, values: []int{1, 2, 3}},
 			value: 0,
 			index: 0,
 			nv:    1,
@@ -27,7 +27,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			right: []int{2, 3},
 		},
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 2, 3, 4}},
+			node:  &node[int]{nodes: nil, values: []int{1, 2, 3, 4}},
 			value: 0,
 			index: 0,
 			nv:    2,
@@ -35,7 +35,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			right: []int{3, 4},
 		},
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 3, 4}},
+			node:  &node[int]{nodes: nil, values: []int{1, 3, 4}},
 			value: 2,
 			index: 1,
 			nv:    2,
@@ -43,7 +43,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			right: []int{3, 4},
 		},
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 3, 4, 5}},
+			node:  &node[int]{nodes: nil, values: []int{1, 3, 4, 5}},
 			value: 2,
 			index: 1,
 			nv:    3,
@@ -51,7 +51,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			right: []int{4, 5},
 		},
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 2, 4}},
+			node:  &node[int]{nodes: nil, values: []int{1, 2, 4}},
 			value: 3,
 			index: 2,
 			nv:    2,
@@ -59,7 +59,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			right: []int{3, 4},
 		},
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 2, 4, 5}},
+			node:  &node[int]{nodes: nil, values: []int{1, 2, 4, 5}},
 			value: 3,
 			index: 2,
 			nv:    3,
@@ -67,7 +67,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			right: []int{4, 5},
 		},
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 2, 3, 4}},
+			node:  &node[int]{nodes: nil, values: []int{1, 2, 3, 4}},
 			value: 5,
 			index: 4,
 			nv:    3,
@@ -75,7 +75,7 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			right: []int{4, 5},
 		},
 		{
-			node:  &btreeNode[int]{leafs: nil, values: []int{1, 2, 3, 4, 5, 7, 8}},
+			node:  &node[int]{nodes: nil, values: []int{1, 2, 3, 4, 5, 7, 8}},
 			value: 6,
 			index: 5,
 			nv:    4,
@@ -89,16 +89,16 @@ func TestInsertAtBTreeNodeFullCapacity(t *testing.T) {
 			fmt.Sprintf("test case %v, insert value %v at index %v", i, c.value, c.index),
 			func(t *testing.T) {
 				// when
-				removedValue, l, r := c.node.insertAt(c.index, c.value)
+				removedValue, _, _ := c.node.insertAt(c.index, len(c.node.values), c.value)
 				// then
 				assert.Equal(t, c.nv, removedValue)
-				assert.Equal(t, c.left, l)
-				assert.Equal(t, c.right, r)
+				//	assert.Equal(t, c.left, l.values)
+				//	assert.Equal(t, c.right, r.values)
 			})
 	}
 }
 
-func TestInsertAtBTreeNodeFreeCapacity(t *testing.T) {
+func TestInsertAtBTreenodeFreeCapacity(t *testing.T) {
 	// given
 
 	cases := []struct {
@@ -106,8 +106,8 @@ func TestInsertAtBTreeNodeFreeCapacity(t *testing.T) {
 		value int
 		index int
 		nv    int
-		left  []int
-		right []int
+		left  *node[int]
+		right *node[int]
 	}{
 		{
 			node:  []int{1, 2, 3},
@@ -180,10 +180,10 @@ func TestInsertAtBTreeNodeFreeCapacity(t *testing.T) {
 			fmt.Sprintf("test case %v, insert value %v at index %v", i, c.value, c.index),
 			func(t *testing.T) {
 				// when
-				node := make([]int, len(c.node), 100)
-				copy(node, c.node)
-				n := &btreeNode[int]{leafs: nil, values: node}
-				removedValue, l, r := n.insertAt(c.index, c.value)
+				values := make([]int, len(c.node))
+				copy(values, c.node)
+				n := &node[int]{nodes: nil, values: values}
+				removedValue, l, r := n.insertAt(c.index, len(values)+1, c.value)
 				// then
 				assert.Equal(t, c.nv, removedValue)
 				assert.Equal(t, c.left, l)
@@ -192,19 +192,19 @@ func TestInsertAtBTreeNodeFreeCapacity(t *testing.T) {
 	}
 }
 
-func BenchmarkBTreeNodeInsertAtNotExcededCapacity(b *testing.B) {
+func BenchmarkBTreenodeInsertAtNotExcededCapacity(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		node := make([]int, 9, 10)
-		n := &btreeNode[int]{leafs: nil, values: node}
-		n.insertAt(7, 7)
+		v := make([]int, 9, 10)
+		n := &node[int]{nodes: nil, values: v}
+		n.insertAt(7, len(n.values)+1, 7)
 	}
 }
 
-func BenchmarkBTreeNodeInsertAtExcededCapacity(b *testing.B) {
+func BenchmarkBTreenodeInsertAtExcededCapacity(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		node := make([]int, 10, 10)
-		n := &btreeNode[int]{leafs: nil, values: node}
-		n.insertAt(7, 7)
+		v := make([]int, 10, 10)
+		n := &node[int]{nodes: nil, values: v}
+		n.insertAt(7, len(n.values), 7)
 	}
 }
 
@@ -257,14 +257,14 @@ func TestInsertValues(t *testing.T) {
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
 			v := make([]int, 0, c.cap)
-			n := btreeNode[int]{leafs: nil, values: v}
-			var l, r []int
+			n := node[int]{nodes: nil, values: v}
+			var l, r *node[int]
 			for _, v := range c.values {
-				_, l, r = n.insert(v)
+				_, l, r = n.insert(v, c.cap)
 			}
 			if l != nil && r != nil {
-				assert.Equal(t, c.l, l)
-				assert.Equal(t, c.r, r)
+				assert.Equal(t, c.l, l.values)
+				assert.Equal(t, c.r, r.values)
 			} else {
 				assert.Equal(t, c.result, n.values)
 			}
@@ -276,9 +276,9 @@ func TestInsertValues(t *testing.T) {
 func BenchmarkInsertValuesNotExceededCapacity5Inserts(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		v := make([]int, 0, 5)
-		n := btreeNode[int]{leafs: nil, values: v}
+		n := node[int]{nodes: nil, values: v}
 		for i := 0; i < 5; i++ {
-			n.insert(i)
+			n.insert(i, 5)
 		}
 	}
 }
@@ -286,9 +286,9 @@ func BenchmarkInsertValuesNotExceededCapacity5Inserts(b *testing.B) {
 func BenchmarkInsertValuesHalfExceededCapacity5Inserts(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		v := make([]int, 0, 2)
-		n := btreeNode[int]{leafs: nil, values: v}
+		n := node[int]{nodes: nil, values: v}
 		for i := 0; i < 5; i++ {
-			n.insert(i)
+			n.insert(i, 2)
 		}
 	}
 }
@@ -296,9 +296,9 @@ func BenchmarkInsertValuesHalfExceededCapacity5Inserts(b *testing.B) {
 func BenchmarkInsertValuesNotExcededCapacity100Inserts(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		v := make([]int, 0, 100)
-		n := btreeNode[int]{leafs: nil, values: v}
+		n := node[int]{nodes: nil, values: v}
 		for i := 0; i < 100; i++ {
-			n.insert(i)
+			n.insert(i, 100)
 		}
 	}
 }
@@ -306,233 +306,18 @@ func BenchmarkInsertValuesNotExcededCapacity100Inserts(b *testing.B) {
 func BenchmarkInsertValuesHalfExcededCapacity100Inserts(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		v := make([]int, 0, 50)
-		n := btreeNode[int]{leafs: nil, values: v}
+		n := node[int]{nodes: nil, values: v}
 		for i := 0; i < 100; i++ {
-			n.insert(i)
-		}
-	}
-}
-
-func TestSplitBTreeNodeLeafs(t *testing.T) {
-	cases := []struct {
-		values []int
-		rv     int
-		l      []int
-		r      []int
-		idx    int
-	}{
-		{
-			values: []int{7, 10, 13},
-			rv:     3,
-			l:      []int{1, 2},
-			r:      []int{4, 5, 6},
-			idx:    0,
-		},
-		{
-			values: []int{4, 12, 16},
-			rv:     9,
-			l:      []int{7, 8},
-			r:      []int{10, 11},
-			idx:    1,
-		},
-		{
-			values: []int{7, 12, 17},
-			rv:     14,
-			l:      []int{13},
-			r:      []int{15, 16},
-			idx:    2,
-		},
-		{
-			values: []int{7, 12, 17},
-			rv:     20,
-			l:      []int{18, 19},
-			r:      []int{21, 22},
-			idx:    3,
-		},
-	}
-	for i, c := range cases {
-		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			n := newBtreeNode[int](len(c.values)+1, nil)
-			for _, v := range c.values {
-				n.values = append(n.values, v)
-			}
-			for range c.values {
-				n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1, n))
-			}
-			n.leafs = append(n.leafs, newBtreeNode[int](len(c.values)+1, n))
-
-			for _, l := range n.leafs {
-				fmt.Printf("%v\n", l)
-			}
-			fmt.Println("----")
-			n.splitLeafsLastNode(c.rv, c.l, c.r)
-			for _, l := range n.leafs {
-				fmt.Printf("%v\n", l)
-			}
-			assert.Equal(t, c.l, n.leafs[c.idx].values)
-			if c.idx < len(c.values) {
-				assert.Equal(t, c.r, n.leafs[c.idx+1].values)
-			}
-		})
-	}
-
-}
-
-func BenchmarkSplitLeafs(b *testing.B) {
-	values := []int{7, 12, 17}
-	rv := 14
-	l := []int{18, 19}
-	r := []int{21, 22}
-	for n := 0; n < b.N; n++ {
-		n := newBtreeNode[int](len(values)+1, nil)
-		n.values = values
-		for range values {
-			n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1, n))
-		}
-		n.leafs = append(n.leafs, newBtreeNode[int](len(values)+1, n))
-		n.splitLeafsLastNode(rv, l, r)
-	}
-}
-
-func TestInsertBTree(t *testing.T) {
-	// given
-	datanums := []int{21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20}
-	// when
-	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
-	for _, c := range cases {
-		t.Run(fmt.Sprintf("testing max values %v", c), func(t *testing.T) {
-			r := New[int](c)
-			for _, v := range datanums {
-				r.Insert(v)
-			}
-			// then
-			assert.Equal(t, c, r.max)
-		})
-	}
-}
-
-func TestInsertRepeatedBTree(t *testing.T) {
-	// given
-	datanums := []int{
-		21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20, 21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20,
-	}
-	// when
-	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
-	for _, c := range cases {
-		t.Run(fmt.Sprintf("testing max values %v", c), func(t *testing.T) {
-			r := New[int](c)
-			for _, v := range datanums {
-				r.Insert(v)
-			}
-			// then
-			assert.Equal(t, c, r.max)
-		})
-	}
-}
-
-func BenchmarkInsertBTree(b *testing.B) {
-	// given
-	datanums := []int{21, 12, 10, 11, 1, 14, 2, 4, 3, 15, 16, 17, 7, 6, 5, 9, 8, 20}
-	// when
-	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
-	for _, c := range cases {
-		b.Run(fmt.Sprintf("testing max values %v", c), func(b *testing.B) {
-			for n := 0; n < b.N; n++ {
-				r := New[int](c)
-				for _, v := range datanums {
-					r.Insert(v)
-				}
-			}
-		})
-	}
-}
-
-func BenchmarkInsertLArgeDatasetBTree(b *testing.B) {
-	// given
-	numOfItems := 100000
-	// when
-	cases := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
-	for _, c := range cases {
-		b.Run(fmt.Sprintf("testing max values %v", c), func(b *testing.B) {
-			for n := 0; n < b.N; n++ {
-				r := New[int](c)
-				for i := 0; i < numOfItems; i++ {
-					r.Insert(i)
-				}
-			}
-		})
-	}
-}
-
-func TestFindInBTree(t *testing.T) {
-	// given
-	cases := []struct {
-		found     bool
-		inserted  []int
-		toBeFound []int
-	}{
-		{
-			found:     true,
-			inserted:  []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
-			toBeFound: []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
-		},
-		{
-			found:     true,
-			inserted:  []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
-			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-		},
-		{
-			found:     true,
-			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-			toBeFound: []int{5, 6, 7, 8, 9, 0, 1, 2, 3, 4},
-		},
-		{
-			found:     true,
-			inserted:  []int{0, 1, 2, 9, 3, 9, 4, 8, 5, 7, 6},
-			toBeFound: []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-		},
-		{
-			found:     false,
-			inserted:  []int{0, 9, 8, 7, 6, 5, 4, 3, 2, 1},
-			toBeFound: []int{10, 11, 12, 13, 14, 15, 16},
-		},
-		{
-			found:     false,
-			inserted:  []int{10, 11, 12, 13, 14, 15, 16},
-			toBeFound: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
-		},
-		{
-			found:     false,
-			inserted:  []int{1, 3, 5, 7, 9, 11},
-			toBeFound: []int{0, 2, 4, 6, 8, 10},
-		},
-	}
-
-	sizes := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
-
-	for _, size := range sizes {
-		for i, c := range cases {
-			t.Run(fmt.Sprintf("size: %v, test case %v, passing %v", size, i, c.found), func(t *testing.T) {
-				// when
-				r := New[int](size)
-				for _, v := range c.inserted {
-					r.Insert(v)
-				}
-				for _, v := range c.toBeFound {
-					// then
-					f := r.Find(v)
-					assert.Equal(t, c.found, f)
-				}
-			})
+			n.insert(i, 50)
 		}
 	}
 }
 
 func TestTraversalBTree(t *testing.T) {
-	sizes := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	sizes := []int{2, 3, 4, 5}
 	for _, size := range sizes {
 		r := New[int](size)
-		for i := 0; i < 200; i++ {
+		for i := 0; i < 50; i++ {
 			r.Insert(i)
 		}
 		r.Traversal()
