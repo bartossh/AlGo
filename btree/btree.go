@@ -7,36 +7,20 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-type comperable = constraints.Ordered
-
-type prevNode[T comperable] struct {
-	prev *prevNode[T]
-	node *node[T]
-}
-
-// node is a node in btree data structure
-type node[T comperable] struct {
-	nodes  []*node[T]
-	values []T
-}
+type comparable = constraints.Ordered
 
 // BTree is a btree data structure
-type BTree[T comperable] struct {
+type BTree[T comparable] struct {
 	root     *node[T]
 	capacity int
 }
 
-func New[T comperable](cap int) *BTree[T] {
+func New[T comparable](cap int) *BTree[T] {
 	n := new[T](cap)
 	return &BTree[T]{n, cap}
 }
 
-func new[T comperable](capacity int) *node[T] {
-	values := make([]T, 0, capacity)
-	return &node[T]{nil, values}
-}
-
-// Traversal travers the btree nodes and prints to stdout values adding prefix for tree like structure
+// Traversal traverse the btree nodes and prints to stdout values adding prefix for tree like structure
 func (r BTree[T]) Traversal() {
 	r.root.traversal(0)
 }
@@ -71,7 +55,7 @@ func (r *BTree[T]) Insert(v T) {
 		}
 
 		idx, ok = prev.node.findIdx(v)
-		if !ok {
+		if ok {
 			return
 		}
 		v, ln, rn = prev.node.arrange(idx, r.capacity, v, ln, rn)
@@ -83,9 +67,43 @@ func (r *BTree[T]) Insert(v T) {
 	}
 }
 
+// Find looks for the value in BTree data structure
+// returns true id value exists or false otherwise
+func (r *BTree[T]) Find(v T) bool {
+	n := r.root
+	if len(n.nodes) == 0 {
+		return false
+	}
+	for {
+		i, ok := n.findIdx(v)
+		if ok {
+			return true
+		}
+		if len(n.nodes) == 0 {
+			return false
+		}
+		n = n.nodes[i]
+	}
+}
+
+type prevNode[T comparable] struct {
+	prev *prevNode[T]
+	node *node[T]
+}
+
+type node[T comparable] struct {
+	nodes  []*node[T]
+	values []T
+}
+
+func new[T comparable](capacity int) *node[T] {
+	values := make([]T, 0, capacity)
+	return &node[T]{nil, values}
+}
+
 func (n *node[T]) insert(v T, capacity int) (nv T, ln, rn *node[T]) {
 	idx, ok := n.findIdx(v)
-	if !ok {
+	if ok {
 		return
 	}
 	nv, ln, rn = n.insertAt(idx, capacity, v)
@@ -143,7 +161,7 @@ func (n *node[T]) findIdx(v T) (int, bool) {
 	idx := 0
 	for i, vv := range n.values {
 		if v == vv {
-			return 0, false
+			return i, true
 		}
 		if v > vv {
 			idx = i + 1
@@ -152,7 +170,7 @@ func (n *node[T]) findIdx(v T) (int, bool) {
 		break
 	}
 
-	return idx, true
+	return idx, false
 }
 
 func (n *node[T]) traversal(spcs int) {

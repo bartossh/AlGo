@@ -2,6 +2,7 @@ package btree
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -321,5 +322,110 @@ func TestTraversalBTree(t *testing.T) {
 			r.Insert(i)
 		}
 		r.Traversal()
+	}
+}
+
+func TestFindInBtree(t *testing.T) {
+	ordered := make([]int, 1000)
+	reversed := make([]int, 1000)
+	even := make([]int, 0, 500)
+	odd := make([]int, 0, 500)
+	for i := 0; i < 1000; i++ {
+		ordered[i] = i
+		reversed[i] = 1000 - i - 1
+		if i%2 == 0 {
+			even = append(even, i)
+		} else {
+			odd = append(odd, i)
+		}
+	}
+
+	sizes := []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}
+	cases := []struct {
+		name      string
+		insert    []int
+		find      []int
+		toBeFound bool
+	}{
+		{
+			name:      "insert in order look in order, success",
+			insert:    ordered,
+			find:      ordered,
+			toBeFound: true,
+		},
+		{
+			name:      "insert in order look in reversed, success",
+			insert:    ordered,
+			find:      reversed,
+			toBeFound: true,
+		},
+		{
+			name:      "insert in reversed look in order, success",
+			insert:    reversed,
+			find:      ordered,
+			toBeFound: true,
+		},
+		{
+			name:      "insert in reversed look reversed, success",
+			insert:    reversed,
+			find:      reversed,
+			toBeFound: true,
+		},
+		{
+			name:      "insert in odd, look odd, success",
+			insert:    odd,
+			find:      odd,
+			toBeFound: true,
+		},
+		{
+			name:      "insert in even, look even, success",
+			insert:    even,
+			find:      even,
+			toBeFound: true,
+		},
+		{
+			name:      "insert in odd, look even, fail",
+			insert:    odd,
+			find:      even,
+			toBeFound: false,
+		},
+		{
+			name:      "insert even, look odd, success",
+			insert:    even,
+			find:      odd,
+			toBeFound: false,
+		},
+	}
+
+	for _, c := range cases {
+		for _, s := range sizes {
+			t.Run(fmt.Sprintf("%s, size %v", c.name, s), func(t *testing.T) {
+				r := New[int](s)
+				for _, v := range c.insert {
+					r.Insert(v)
+				}
+				for _, v := range c.find {
+					f := r.Find(v)
+					assert.Equal(t, c.toBeFound, f)
+				}
+			})
+		}
+	}
+}
+
+func BenchmarkInsertBtreeRoot(b *testing.B) {
+	for _, size := range []int{1000, 10000, 100000} {
+		for _, cap := range []int{2, 3, 4, 5, 6, 7, 8, 9, 10} {
+			r := New[int](cap)
+			for v := 0; v < size; v++ {
+				r.Insert(v)
+			}
+			b.Run(fmt.Sprintf("size %v cap %v", size, cap), func(b *testing.B) {
+				for n := 0; n < b.N; n++ {
+					v := int(rand.Int63n(int64(size)))
+					r.Find(v)
+				}
+			})
+		}
 	}
 }
