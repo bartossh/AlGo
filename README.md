@@ -13,6 +13,7 @@ Playground repository containing collection of algorithms written in Go.
 5. [Merge](https://github.com/bartossh/AlGo/blob/main/mergesort/mergesort.go) - merge sort is a divide and conquer sort algorithm with time complexity average of O(n log n)
 6. [Shell](https://github.com/bartossh/AlGo/blob/main/shellsort/shellsort.go) - shell sort algorithm will sort values that are far apart from each other rather than adjacent, worst time complexity is O(n log^2 n), worst is O(n log n)
 7. [Quick](https://github.com/bartossh/AlGo/blob/main/quicksort/quicksort.go) - quick sort algorithm is a divide and conquer sort algorithm with time complexity average of O(n\log n)
+8. [Bartosz](https://github.com/bartossh/AlGo/blob/main/bartoszsort/bartoszsort.go) - sorting algorithm that is my playground for prototyping with sort algorithms 
 
 ### Path traversal
 
@@ -38,3 +39,4 @@ Playground repository containing collection of algorithms written in Go.
 1. [Fibonacci nth element](https://github.com/bartossh/AlGo/blob/main/fibonacci/fibonacci.go) - calculates n'th fibonacci sequence element recursively storing each n'th fibonacci value in the map to only calculate it once
 2. [Coin Change](https://github.com/bartossh/AlGo/blob/main/coinchange/coinchange.go) - calculates the fewest number of coins that need to make up that amount
 3. [Maximum Sub Array](https://github.com/bartossh/AlGo/blob/main/maximumsubarray/maximumsubarray.go) - finds sub array with the maximum sum and returns it sum
+4. [Repetition Search](https://github.com/bartossh/AlGo/blob/main/repetitionsearch/repetitionsearch.go) - searches repetition in slice of integers
