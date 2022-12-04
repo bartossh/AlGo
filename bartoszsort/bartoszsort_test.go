@@ -34,6 +34,10 @@ func TestRemoveEmptyAllocs(t *testing.T) {
 			given:    []int{0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 0, 7, 0, 0, 0},
 			expected: []int{1, 2, 3, 4, 5, 6, 7},
 		},
+		{
+			given:    []int{0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 0, 7, 0},
+			expected: []int{1, 2, 3, 4, 5, 6, 7},
+		},
 	}
 
 	for i, c := range cases {
