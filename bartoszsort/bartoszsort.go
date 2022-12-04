@@ -34,6 +34,9 @@ func removeEmptyAllocs[T constrains.NaturalNumber](a []T) []T {
 		if v == 0 && !wasEmpty {
 			f = i
 			wasEmpty = true
+			if i == len(a)-1 {
+				continue
+			}
 			i++
 			continue
 		}
@@ -41,7 +44,7 @@ func removeEmptyAllocs[T constrains.NaturalNumber](a []T) []T {
 			wasEmpty = false
 			a = append(a[:f], a[i:]...)
 			i++
-			i -= i - f
+			i = f
 			continue
 		}
 		if i == len(a)-1 && wasEmpty {
