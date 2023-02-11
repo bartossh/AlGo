@@ -1,35 +1,32 @@
 package repetitionsearch
 
-// SearchWithSet makes linear search through the slice of ints looking for the first repeated number
-func SearchWithSet(sl []int) int {
-	set := make(map[int]struct{}, len(sl))
+import "math"
+
+// Search makes linear search through the slice of ints looking for the first repeated number
+func Search(sl []int) (int, bool) {
+	set := make(map[int]struct{})
 	for i := range sl {
 		v := sl[i]
 		if _, ok := set[v]; ok {
-			return i
+			return i, true
 		}
 		set[v] = struct{}{}
 	}
-	return -1
+	return 0, false
 }
 
-// SearchWithMutation searches the slice by mutating its values
-func SearchWithMutation(slO []int) int {
-	slC := make([]int, len(slO))
-	copy(slC, slO)
-	for i := 0; i < len(slC); i++ {
-		idx := abs(slC[i]) - 1
-		if slC[idx] < 0 {
-			return i
+// SearchFast is the high speed search,
+// but is limited with max number value in given slice to be les then math.MaxInt
+func SearchFast(sl []int) (int, bool) {
+	resp := make([]byte, math.MaxInt16)
+	for i, v := range sl {
+		j := v / 8
+		var mask byte = 1 << (v % 8)
+		if resp[j]&mask != 0 {
+			return i, true
 		}
-		slC[idx] = slC[idx] * -1
+		resp[j] |= mask
 	}
-	return -1
-}
 
-func abs(a int) int {
-	if a > 0 {
-		return a
-	}
-	return -a
+	return -1, false
 }

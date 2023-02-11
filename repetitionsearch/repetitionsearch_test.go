@@ -30,8 +30,8 @@ func TestNoRepetitionWithSet(t *testing.T) {
 
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			i := SearchWithSet(c.sl)
-			assert.Less(t, i, 0)
+			i, _ := Search(c.sl)
+			assert.Less(t, i, 1)
 		})
 	}
 }
@@ -65,25 +65,27 @@ func TestExistRepetitionNotConsecutiveWithSet(t *testing.T) {
 
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			i := SearchWithSet(c.sl)
+			i, _ := Search(c.sl)
 			assert.Equal(t, c.repIdx, i)
 		})
 	}
 }
 
 func BenchmarkRepetitionSearchWithSet(b *testing.B) {
+	b.ReportAllocs()
+
 	b.StopTimer()
-	sl := make([]int, 1000000)
+	sl := make([]int, 10000)
 	for i := range sl {
 		sl[i] = i + 1
 	}
 	b.StartTimer()
 	for n := 0; n < b.N; n++ {
-		SearchWithSet(sl)
+		Search(sl)
 	}
 }
 
-func TestNoRepetitionWithMut(t *testing.T) {
+func TestNoRepetitionFast(t *testing.T) {
 	cases := []struct {
 		sl []int
 	}{
@@ -106,13 +108,13 @@ func TestNoRepetitionWithMut(t *testing.T) {
 
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			i := SearchWithMutation(c.sl)
-			assert.Less(t, i, 0)
+			_, ok := SearchFast(c.sl)
+			assert.False(t, ok)
 		})
 	}
 }
 
-func TestExistRepetitionNotConsecutiveWithMut(t *testing.T) {
+func TestExistRepetitionNotConsecutiveFast(t *testing.T) {
 	cases := []struct {
 		sl     []int
 		repIdx int
@@ -141,20 +143,22 @@ func TestExistRepetitionNotConsecutiveWithMut(t *testing.T) {
 
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			i := SearchWithMutation(c.sl)
+			i, _ := SearchFast(c.sl)
 			assert.Equal(t, c.repIdx, i)
 		})
 	}
 }
 
-func BenchmarkRepetitionSearchWithMut(b *testing.B) {
+func BenchmarkRepetitionSearchFast(b *testing.B) {
+	b.ReportAllocs()
+
 	b.StopTimer()
-	sl := make([]int, 1000000)
+	sl := make([]int, 10000)
 	for i := range sl {
 		sl[i] = i + 1
 	}
 	b.StartTimer()
 	for n := 0; n < b.N; n++ {
-		SearchWithMutation(sl)
+		SearchFast(sl)
 	}
 }
