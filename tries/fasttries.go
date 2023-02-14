@@ -49,7 +49,7 @@ func (n *FastNode) Insert(s string) (bool, error) {
 // Find finds string in FastNode structure
 func (n *FastNode) Find(s string) bool {
 	s = strings.ToLower(s)
-	for _, r := range []rune(s) {
+	for _, r := range s {
 		if r < firstRune || r > firstRune+lengthRunes {
 			return false
 		}
@@ -60,8 +60,5 @@ func (n *FastNode) Find(s string) bool {
 		}
 		return false
 	}
-	if n.terminal {
-		return true
-	}
-	return false
+	return n.terminal
 }
