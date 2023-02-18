@@ -50,8 +50,48 @@ func (n *Node) Find(s string) bool {
 		}
 		n = nf
 	}
+	return n.terminal
+}
+
+// Delete removes string from trie
+func (n *Node) Delete(s string) bool {
+	root := n
+	for i, w := 0, 0; i < len(s); i += w {
+		l, width := utf8.DecodeRuneInString(s[i:])
+		w = width
+		nf, ok := n.children[l]
+		if !ok {
+			return false
+		}
+		n = nf
+	}
+
+	if !n.terminal {
+		return false
+	}
+	n.terminal = false
+
+	root.Clean()
+	return true
+}
+
+func (n *Node) Clean() bool {
+	if n == nil {
+		return false
+	}
+
 	if n.terminal {
 		return true
 	}
-	return false
+
+	var hasChilde bool
+	for k, c := range n.children {
+		if c.Clean() {
+			hasChilde = true
+			continue
+		}
+		delete(n.children, k)
+	}
+
+	return hasChilde
 }

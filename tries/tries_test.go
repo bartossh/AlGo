@@ -82,6 +82,20 @@ func TestFindFailureNotInserted(t *testing.T) {
 	}
 }
 
+func TestDelete(t *testing.T) {
+	n := New()
+	for _, fraze := range frazes {
+		ok := n.Insert(fraze)
+		assert.True(t, ok)
+	}
+
+	ok := n.Delete(frazes[0])
+	assert.True(t, ok)
+
+	ok = n.Find(frazes[0])
+	assert.False(t, ok)
+}
+
 func BenchmarkInsert(b *testing.B) {
 	chars := "1234567890-_=+{}[]:;<>,.?'"
 	largeSet := make([]string, 0, len(frazes)*len(chars))
