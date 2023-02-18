@@ -87,6 +87,21 @@ func TestFastNodeFindFailure(t *testing.T) {
 	}
 }
 
+func TestFastNodeDeleteSuccess(t *testing.T) {
+	n := NewFast()
+
+	for _, s := range smallLettersCollection {
+		ok, err := n.Insert(s)
+		assert.True(t, ok)
+		assert.Nil(t, err)
+	}
+
+	for _, s := range smallLettersCollection {
+		ok := n.Delete(s)
+		assert.True(t, ok)
+	}
+}
+
 func BenchmarkFastNodeInsert(b *testing.B) {
 	benchSlice := make([]string, 0, len(smallLettersCollection)*len(smallLettersCollection))
 	for _, s1 := range smallLettersCollection {
@@ -127,6 +142,29 @@ func BenchmarkFastNodeFind(b *testing.B) {
 		for _, s := range benchSlice {
 			ok := nn.Find(s)
 			assert.True(b, ok)
+		}
+	}
+}
+
+func BenchmarkFastNodeDelete(b *testing.B) {
+	benchSlice := make([]string, 0, len(smallLettersCollection)*len(smallLettersCollection))
+	for _, s1 := range smallLettersCollection {
+		for _, s2 := range smallLettersCollection {
+			benchSlice = append(benchSlice, fmt.Sprintf("%s%s", s1, s2))
+		}
+	}
+
+	b.ResetTimer()
+
+	nn := NewFast()
+	for _, s := range benchSlice {
+		ok, err := nn.Insert(s)
+		assert.True(b, ok)
+		assert.Nil(b, err)
+	}
+	for n := 0; n < b.N; n++ {
+		for _, s := range benchSlice {
+			nn.Delete(s)
 		}
 	}
 }

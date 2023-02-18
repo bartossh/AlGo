@@ -147,3 +147,31 @@ func BenchmarkFind(b *testing.B) {
 	}
 
 }
+
+func BenchmarkDelete(b *testing.B) {
+	chars := "1234567890-_=+{}[]:;<>,.?'"
+	largeSet := make([]string, 0, len(frazes)*len(chars))
+	for _, fraze := range frazes {
+		largeSet = append(largeSet, fraze)
+		for i, w := 0, 0; i < len(chars); i += w {
+			l, width := utf8.DecodeRuneInString(chars[i:])
+			w = width
+			largeSet = append(largeSet, fmt.Sprintf("%s%s%s", string(l), fraze, string(l)))
+		}
+	}
+
+	b.ResetTimer()
+
+	nn := New()
+	for _, fraze := range largeSet {
+		ok := nn.Insert(fraze)
+		assert.True(b, ok)
+	}
+
+	for n := 0; n < b.N; n++ {
+		for _, fraze := range largeSet {
+			nn.Delete(fraze)
+		}
+	}
+
+}

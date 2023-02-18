@@ -71,11 +71,11 @@ func (n *Node) Delete(s string) bool {
 	}
 	n.terminal = false
 
-	root.Clean()
+	root.clean()
 	return true
 }
 
-func (n *Node) Clean() bool {
+func (n *Node) clean() bool {
 	if n == nil {
 		return false
 	}
@@ -86,7 +86,7 @@ func (n *Node) Clean() bool {
 
 	var hasChilde bool
 	for k, c := range n.children {
-		if c.Clean() {
+		if c.clean() {
 			hasChilde = true
 			continue
 		}
