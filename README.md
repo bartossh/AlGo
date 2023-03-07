@@ -24,6 +24,7 @@ Playground repository containing collection of algorithms written in Go.
 1. [BTree](https://github.com/bartossh/AlGo/blob/main/btree/btree.go) - B-tree is a special type of self-balancing search tree in which each node can contain more than one key and can have more than two children [Animated example](https://www.cs.usfca.edu/~galles/visualization/BTree.html)
 2. [Tries](https://github.com/bartossh/AlGo/blob/main/tries/tries.go) - Tries are a form of string-indexed look-up data structure, which is used to store a dictionary list of words that can be searched on in a manner that allows for efficient generation of completion lists.
 3. [MaxSubArray](https://github.com/bartossh/AlGo/blob/main/maximumsubarray/maximumsubarray.go) - The maximum sum subarray problem, also known as the maximum segment sum problem, is the task of finding a contiguous subarray with the largest sum, within a given one-dimensional array A[1...n] of numbers
+4. [Fifo Buffer](https://github.com/bartossh/AlGo/blob/main/fifobuf/fifobuf.go) - First in first out buffer is a buffer that queues data in a way that items are retrieved in the order they are added.
 
 ### Math
 
