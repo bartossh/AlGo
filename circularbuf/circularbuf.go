@@ -29,13 +29,28 @@ func (b *Buffer[T]) Get() (T, error){
 	return b.inner[b.cur], nil
 }
 
-// Add adds value at current position.
-func (b *Buffer[T]) Add(value T) {
-	if b.cur <= 0 {
+// AddPrev adds value at previous position.
+func (b *Buffer[T]) AddPrev(value T) {
+	switch {
+	case b.cur <= 0:
 		b.inner = append(b.inner, value)
-		return
+		b.cur = 0
+	case b.cur == 0:
+		b.inner = append([]T{value}, b.inner...)
+	default:
+		b.inner = append(b.inner[:b.cur], append([]T{value}, b.inner[b.cur:]...)...)
 	}
-	b.inner = append(b.inner[:b.cur], append([]T{value}, b.inner[b.cur+1:]...)...)
+}
+
+// AddNext moves cursor forward and adds a value at this position.
+func (b *Buffer[T]) AddNext(value T) {
+	b.cur++
+	switch {
+	case b.cur == len(b.inner), b.cur == 0:
+		b.inner = append(b.inner, value)
+	default:
+		b.inner = append(b.inner[:b.cur], append([]T{value}, b.inner[b.cur+1:]...)...)
+	}
 }
 
 // RemoveSeek removes value at given cursor position.
@@ -52,7 +67,7 @@ func (b *Buffer[T]) RemoveSeek(cur int) (T, error) {
 	case cur == len(b.inner):
 		b.inner = b.inner[:len(b.inner)-1]
 	default:
-		b.inner = append(b.inner[:b.cur], b.inner[b.cur+1:]...)
+		b.inner = append(b.inner[:cur], b.inner[cur+1:]...)
 	}
 
 
@@ -109,7 +124,7 @@ func (b *Buffer[T]) Prev() (T, error) {
 		return t, errors.New("empty buffer")
 	}
 	b.cur--
-	if b.cur == 0 {
+	if b.cur < 0 {
 		b.cur = len(b.inner) - 1
 	}
 	return b.inner[b.cur], nil
