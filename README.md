@@ -26,6 +26,7 @@ Playground repository containing collection of algorithms written in Go.
 3. [MaxSubArray](https://github.com/bartossh/AlGo/blob/main/maximumsubarray/maximumsubarray.go) - The maximum sum subarray problem, also known as the maximum segment sum problem, is the task of finding a contiguous subarray with the largest sum, within a given one-dimensional array A[1...n] of numbers
 4. [Fifo Buffer](https://github.com/bartossh/AlGo/blob/main/fifobuf/fifobuf.go) - First in first out buffer is a buffer that queues data in a way that items are retrieved in the order they are added.
 5. [Circular Buffer](https://github.com/bartossh/AlGo/blob/main/circularbuf/circularbuf.go) - circular buffer is a buffer allowing to move in circle using next and prev methods. It has some extensions methods such as seek and seek remove.
+6. [Geo Math](https://github.com/bartossh/AlGo/blob/main/geomath/geo.math.go) - Geo Math algorithm is able to read geojson and validate if given location is within a geo polygon.
 
 ### Math
 
