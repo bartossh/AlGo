@@ -43,3 +43,7 @@ Playground repository containing collection of algorithms written in Go.
 2. [Coin Change](https://github.com/bartossh/AlGo/blob/main/coinchange/coinchange.go) - calculates the fewest number of coins that need to make up that amount
 3. [Maximum Sub Array](https://github.com/bartossh/AlGo/blob/main/maximumsubarray/maximumsubarray.go) - finds sub array with the maximum sum and returns it sum
 4. [Repetition Search](https://github.com/bartossh/AlGo/blob/main/repetitionsearch/repetitionsearch.go) - searches repetition in slice of integers
+
+### Patterns
+
+1. [Chained Calls](https://github.com/bartossh/AlGo/blob/main/chainedcalls/chainedcalls.go) - allows for restricted chained method calls. This prevents for calling API methods in a way that can cause unpredicted behavior.
