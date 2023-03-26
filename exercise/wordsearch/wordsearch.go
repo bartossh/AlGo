@@ -193,7 +193,7 @@ func Solve(words, puzzle []string) (result map[string][2][2]int, err error) {
 	}
 	// bottom left to top right
 	for _, w := range reverted {
-		if len() == 0 {
+		if len(w) == 0 {
 			continue
 		}
 		for j, p := range puzzleRevert {
@@ -217,4 +217,4 @@ func Solve(words, puzzle []string) (result map[string][2][2]int, err error) {
 		err = fmt.Errorf("Not found ")
 	}
 	return
-}w
+}

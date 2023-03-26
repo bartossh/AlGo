@@ -2,12 +2,14 @@ module github.com/bartossh/AlGo
 
 go 1.19
 
-require github.com/stretchr/testify v1.8.0
+require (
+	github.com/kellydunn/golang-geo v0.7.0
+	github.com/stretchr/testify v1.8.0
+)
 
 require (
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/keegancsmith/rpc v1.3.0 // indirect
-	github.com/kellydunn/golang-geo v0.7.0 // indirect
 	github.com/kylelemons/go-gypsy v1.0.0 // indirect
 	github.com/lib/pq v1.10.7 // indirect
 	github.com/nsf/gocode v0.0.0-20190302080247-5bee97b48836 // indirect
