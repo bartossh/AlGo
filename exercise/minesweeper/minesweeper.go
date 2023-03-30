@@ -24,14 +24,14 @@ func (b *Board) Count() error {
 	for i := range *b {
 		for j := range (*b)[i] {
 			if string((*b)[i][j]) == "*" {
-				applyCounter(b, i, j)
+				b.applyCounter(i, j)
 			}
 		}
 	}
 	return nil
 }
 
-func applyCounter(b *Board, i, j int) {
+func (b *Board) applyCounter(i, j int) {
 	for x := i - 1; x <= i+1; x++ {
 		for y := j - 1; y <= j+1; y++ {
 			v := string((*b)[x][y])
