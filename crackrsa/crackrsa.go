@@ -13,8 +13,8 @@ import (
 const iterations = 1000
 
 // CrackRSA algorithm is cracking RSA tool when p and q are not too far apart.
-// This will not crack topically used RSA keys as p and q are picked to be very far apart.
-// This is a toy algorithm not a real cracking tool. If it cracks your key, you are using insecure RSA algorithm.
+// This will not crack secured RSA keys, where p and q are picked to be very far apart.
+// If this tool cracks your key, you are using insecure RSA algorithm.
 func CrackRSA(e, n []byte) ([]byte, error) {
 	nn := (&big.Int{}).SetBytes(n)
 	a := (&big.Int{}).Add((&big.Int{}).Sqrt(nn), big.NewInt(1))
