@@ -8,3 +8,4 @@ type Sortable interface {
 type NaturalNumber interface {
 	~int | ~rune | ~int64 | ~byte | ~uint | ~uint16 | ~uint32 | ~uint64
 }
+
