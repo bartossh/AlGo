@@ -1,6 +1,12 @@
 # AlGo
 
+[![CodeQL](https://github.com/bartossh/AlGo/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartossh/AlGo/actions/workflows/codeql.yml)
+
+[![Go](https://github.com/bartossh/AlGo/actions/workflows/go.yml/badge.svg)](https://github.com/bartossh/AlGo/actions/workflows/go.yml)
+
 Playground repository containing collection of algorithms written in Go.
+
+Not all algorithms are listed in README. Please browse the packages. 
 
 ## Algorithms
 
