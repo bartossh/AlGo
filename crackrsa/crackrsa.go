@@ -1,8 +1,3 @@
-// Based on https://en.wikipedia.org/wiki/Fermat%27s_factorization_method
-// With common RSA key sizes (2048 bit) in tests,
-// the Fermat algorithm with 100 rounds reliably factors numbers where p and q differ up to 2^517. I
-// n other words, it can be said that primes that only differ within the lower 64 bytes
-// (or around half their size) will be vulnerable.
 package crackrsa
 
 import (
@@ -12,9 +7,20 @@ import (
 
 const iterations = 1000
 
-// CrackRSA algorithm is cracking RSA tool when p and q are not too far apart.
-// This will not crack secured RSA keys, where p and q are picked to be very far apart.
+// CrackRSA algorithm is cracking RSA private key when p and q are not to far apart.
+// This will not crack secured RSA keys, where p and q are picked to be very far apart,
+// Based on https://en.wikipedia.org/wiki/Fermat%27s_factorization_method
+// With common RSA key sizes (2048 bit) in tests,
+// the Fermat algorithm with 100 rounds reliably factors numbers where p and q differ up to 2^517. I
+// n other words, it can be said that primes that only differ within the lower 64 bytes
+// (or around half their size) will be vulnerable.
 // If this tool cracks your key, you are using insecure RSA algorithm.
+// e - public exponent
+// n - modulus
+// d - private exponent
+// e and n are bytes representation of an integer in big endian order.
+// Returns private key as bytes representation of an integer in big endian order or error otherwise.
+// Will not go further then 1000 iterations.
 func CrackRSA(e, n []byte) ([]byte, error) {
 	nn := (&big.Int{}).SetBytes(n)
 	a := (&big.Int{}).Add((&big.Int{}).Sqrt(nn), big.NewInt(1))

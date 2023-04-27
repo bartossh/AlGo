@@ -43,7 +43,7 @@ Playground repository containing collection of algorithms written in Go.
 2. [Coin Change](https://github.com/bartossh/AlGo/blob/main/coinchange/coinchange.go) - calculates the fewest number of coins that need to make up that amount
 3. [Maximum Sub Array](https://github.com/bartossh/AlGo/blob/main/maximumsubarray/maximumsubarray.go) - finds sub array with the maximum sum and returns it sum
 4. [Repetition Search](https://github.com/bartossh/AlGo/blob/main/repetitionsearch/repetitionsearch.go) - searches repetition in slice of integers
-5. [Cracking RSA when p and q are close prime numbers](https://github.com/bartossh/AlGo/blob/main/crackrsa/crackrsa.go) - uses [Fermat's factorization method](https://en.wikipedia.org/wiki/Fermat%27s_factorization_method) to find p and q values assuming those are relatively close values of prime numbers
+5. [Cracking RSA when p and q are close prime numbers](https://github.com/bartossh/AlGo/blob/main/crackrsa/crackrsa.go) - uses [Fermat's factorization method](https://en.wikipedia.org/wiki/Fermat%27s_factorization_method) to find p and q values assuming those are relatively close values of prime numbers. This algorithm may help to determine if you RSA algorithm pics values of p and q badly causing insecurity.
 
 ### Patterns
 

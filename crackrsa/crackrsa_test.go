@@ -17,9 +17,9 @@ func TestSuccessCrack(t *testing.T) {
 	assert.True(t, ok)
 
 	testCases := []struct {
-		n []byte
-		e []byte
-		d []byte
+		n []byte // modulus
+		e []byte // public exponent
+		d []byte // private exponent
 	}{
 		{
 			n: big.NewInt(63648259).Bytes(),
