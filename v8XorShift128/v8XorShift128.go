@@ -10,4 +10,3 @@ func XorShift128(state0, state1 *uint64) {
 	s1 ^= s0 >> 26
 	*state1 = s1
 }
-

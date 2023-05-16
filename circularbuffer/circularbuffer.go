@@ -17,7 +17,7 @@ func NewBuffer(size int) *Buffer {
 	}
 }
 
-//ReadByte implements io.ByteReader for Buffer
+// ReadByte implements io.ByteReader for Buffer
 func (b *Buffer) ReadByte() (byte, error) {
 	if len(b.circ) > 0 {
 		v := b.circ[0]

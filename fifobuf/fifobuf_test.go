@@ -5,43 +5,43 @@ import (
 )
 
 func TestFifoBufCapLow(t *testing.T) {
-	consecutive := []int{0,1,2,3,4,5,6,7,8,9}
+	consecutive := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 	b := NewBuffer[int](1)
 	for _, v := range consecutive {
 		b.Add(v)
 	}
 
-	for _, v  := range consecutive {
+	for _, v := range consecutive {
 		vv, ok := b.Get()
-		if !ok ||  vv != v{
+		if !ok || vv != v {
 			t.Fatal("should not fail")
 		}
 	}
 }
 
 func TestFifoBufCapHigh(t *testing.T) {
-	consecutive := []int{0,1,2,3,4,5,6,7,8,9}
+	consecutive := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 	b := NewBuffer[int](len(consecutive))
 	for _, v := range consecutive {
 		b.Add(v)
 	}
 
-	for _, v  := range consecutive {
+	for _, v := range consecutive {
 		vv, ok := b.Get()
-		if !ok ||  vv != v{
+		if !ok || vv != v {
 			t.Fatal("should not fail")
 		}
 	}
 }
 
 func TestFifoBufNotEnoughElements(t *testing.T) {
-	consecutive := []int{0,1,2,3,4,5,6,7,8,9}
+	consecutive := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 	b := NewBuffer[int](len(consecutive))
 	for _, v := range consecutive {
 		b.Add(v)
 	}
 
-	for i :=0 ; i < 100; i++ {
+	for i := 0; i < 100; i++ {
 		_, ok := b.Get()
 		if i >= 10 && ok {
 			t.Fatal("should not provide nay value")
