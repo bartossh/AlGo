@@ -5,12 +5,12 @@ import "errors"
 // Buffer is a circular buffer.
 // Allows to go to the next and prev value and seek for value.
 type Buffer[T any] struct {
-	cur int
+	cur   int
 	inner []T
 }
- 
+
 // NewBuffer creates new circular buffer that holds any type.
-func NewBuffer[T any] (cap int) *Buffer[T] {
+func NewBuffer[T any](cap int) *Buffer[T] {
 	inner := make([]T, 0, cap)
 	return &Buffer[T]{cur: -1, inner: inner}
 }
@@ -21,7 +21,7 @@ func (b *Buffer[T]) Pos() int {
 }
 
 // Get returns value at current cursor position.
-func (b *Buffer[T]) Get() (T, error){
+func (b *Buffer[T]) Get() (T, error) {
 	if b.cur < 0 {
 		var t T
 		return t, errors.New("empty buffer")
@@ -70,7 +70,6 @@ func (b *Buffer[T]) RemoveSeek(cur int) (T, error) {
 		b.inner = append(b.inner[:cur], b.inner[cur+1:]...)
 	}
 
-
 	if cur < b.cur {
 		b.cur--
 	}
@@ -80,7 +79,7 @@ func (b *Buffer[T]) RemoveSeek(cur int) (T, error) {
 	if b.cur >= len(b.inner) {
 		b.cur = 0
 	}
-	
+
 	return t, nil
 }
 

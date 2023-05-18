@@ -54,3 +54,8 @@ Not all algorithms are listed in README. Please browse the packages.
 ### Patterns
 
 1. [Chained Calls](https://github.com/bartossh/AlGo/blob/main/chainedcalls/chainedcalls.go) - allows for restricted chained method calls. This prevents for calling API methods in a way that can cause unpredicted behavior.
+
+
+### Exercism
+
+1. [Say](https://github.com/bartossh/AlGo/blob/main/say/say.go) - Say exercism task.

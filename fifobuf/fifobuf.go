@@ -5,17 +5,18 @@ package fifobuf
 type Buffer[T any] struct {
 	inner []T
 }
- // NewBuffer creates new fifo Buffer.
+
+// NewBuffer creates new fifo Buffer.
 func NewBuffer[T any](cap int) *Buffer[T] {
 	inner := make([]T, 0, cap)
 	return &Buffer[T]{inner}
 }
- 
+
 // Add adds value to the fifo Buffer.
 func (cb *Buffer[T]) Add(value T) {
 	cb.inner = append(cb.inner, value)
 }
- 
+
 // Get gets value from the fifo Buffer.
 func (cb *Buffer[T]) Get() (T, bool) {
 	if len(cb.inner) == 0 {
