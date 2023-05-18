@@ -59,4 +59,4 @@ Not all algorithms are listed in README. Please browse the packages.
 ### Exercism
 
 1. [Say](https://github.com/bartossh/AlGo/blob/main/say/say.go) - Say exercism task.
-2. [Collatz-conjecturey](https://github.com/bartossh/AlGo/blob/main/collatz-conjecture/collatz-conjecture.go) - Collatz-conjecture exercism task.
+2. [Collatz-conjecturey](https://github.com/bartossh/AlGo/blob/main/collatz-conjecture/collatz_conjecture.go) - Collatz-conjecture exercism task.
